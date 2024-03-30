@@ -12,7 +12,7 @@ const RegisterPage: FC = () => {
     const onSubmit = async (e: FormEvent<HTMLFormElement>): Promise<any> => {
         e.preventDefault();
         const fromData = e.currentTarget;
-        const name = fromData.name.value;
+        const name = fromData.fullname.value;
         const username = fromData.username.value;
         const email = fromData.email.value;
         const password = fromData.password.value;
@@ -44,7 +44,7 @@ const RegisterPage: FC = () => {
                                     placeholder="Enter full name..."
                                     required
                                     type="text"
-                                    name="name"
+                                    name="fullname"
                                 />
                             </div>
                             <div>

@@ -21,13 +21,13 @@ interface ExtraActivity {
 
 interface StudentLevel {
     _id: string;
-    studyRoutine: string;
-    humanityLevel: string;
-    liesCount: string;
-    ordersFollowed: string;
-    treePlantation: string;
+    studyRoutine: any;
+    humanityLevel: any;
+    liesCount: any;
+    ordersFollowed: any;
+    treePlantation: any;
     extraActivity: ExtraActivity;
-    studentEmail: string;
+    studentEmail: any;
 }
 
 const MyReportPage: FC = () => {
@@ -51,7 +51,7 @@ const MyReportPage: FC = () => {
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const fromData = e.currentTarget;
-        const name = fromData.name.value;
+        const name = fromData.fullname.value;
         const phone = fromData.phone.value;
         const school = fromData.school.value;
         const address = fromData.address.value;
@@ -318,7 +318,7 @@ const MyReportPage: FC = () => {
                                             </label>
                                             <input
                                                 type="text"
-                                                name="name"
+                                                name="fullname"
                                                 className="block w-full px-4 py-2 mt-2 dark:bg-[#001422] border dark:text-gray-100 border-gray-600 rounded-md focus:border-[#00bd29] focus:outline-none placeholder:text-gray-500"
                                                 defaultValue={user?.name}
                                                 placeholder="Full Name"

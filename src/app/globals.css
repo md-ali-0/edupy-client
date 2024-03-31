@@ -18,7 +18,17 @@ body {
     color: rgb(var(--foreground-color));
     background: rgb(var(--background-color));
 }
-
+@layer components {
+    .sideLink {
+        @apply flex items-center gap-2 hover:no-underline text-neutral-400 py-2 px-1.5;
+    }
+    .sideLinkActive {
+        @apply flex items-center gap-2 hover:no-underline bg-[#1E293B] rounded text-white py-2 px-1.5;
+    }
+    .dropdownSideBar {
+        @apply relative flex items-center gap-2 hover:no-underline rounded text-neutral-400 py-2 px-1.5 w-full;
+    }
+}
 @layer utilities {
     .text-balance {
         text-wrap: balance;

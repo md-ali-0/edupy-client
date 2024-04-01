@@ -11,7 +11,9 @@ import Container from "../Container/Container";
 const Navbar: FC = () => {
     const [openMenu, setOpenMenu] = useState(false);
     const [openDropDown, setOpenDropDown] = useState(false);
+    const [openMobileDropDown, setOpenMobileDropDown] = useState(false);
     const btnRef = useRef(null);
+    const mobileBtnRef = useRef(null);
     const { user, logout } = useAuth();
     const handleLogout = async () => {
         await logout();
@@ -22,8 +24,11 @@ const Navbar: FC = () => {
             if (e.target !== btnRef.current) {
                 setOpenDropDown(false);
             }
+            if (e.target !== mobileBtnRef.current) {
+                setOpenMobileDropDown(false);
+            }
         });
-    },[openDropDown])
+    },[openDropDown, openMobileDropDown])
     return (
         <div className="dark:bg-[#001d30] bg-slate-100 sticky top-0 z-[999]">
             <Container>
@@ -213,6 +218,7 @@ const Navbar: FC = () => {
                             <li className="mt-14" />
                             <li>
                                 <Link
+                                onClick={() => setOpenMenu(!openMenu)}
                                     className="hover:text-[#1a94f5] dark:hover:text-[#1a94f5] duration-300"
                                     href="/"
                                 >
@@ -221,12 +227,7 @@ const Navbar: FC = () => {
                             </li>
                             <li>
                                 <Link
-                                    className="hover:text-[#1a94f5] dark:hover:text-[#1a94f5] duration-300"
-                                    href=""
-                                />
-                            </li>
-                            <li>
-                                <Link
+                                onClick={() => setOpenMenu(!openMenu)}
                                     href="https://shohojatobd.com/"
                                     target="_blank"
                                     className="hover:text-[#1a94f5] dark:hover:text-[#1a94f5] duration-300"
@@ -236,6 +237,7 @@ const Navbar: FC = () => {
                             </li>
                             <li>
                                 <Link
+                                onClick={() => setOpenMenu(!openMenu)}
                                     className="hover:text-[#1a94f5] dark:hover:text-[#1a94f5] duration-300"
                                     href="/library"
                                 >
@@ -247,8 +249,9 @@ const Navbar: FC = () => {
                                     <button
                                         className="tooltip tooltip-left"
                                         type="button"
+                                        
                                         onClick={() =>
-                                            setOpenDropDown(!openDropDown)
+                                            setOpenMobileDropDown(!openMobileDropDown)
                                         }
                                     >
                                         <div className="flex flex-col items-center justify-center">
@@ -257,6 +260,7 @@ const Navbar: FC = () => {
                                                 loading="lazy"
                                                 width={40}
                                                 height={40}
+                                                ref={mobileBtnRef}
                                                 decoding="async"
                                                 className="rounded-full border border-gray-600  w-[40px] h-[40px]"
                                                 src={user?.image}
@@ -268,8 +272,9 @@ const Navbar: FC = () => {
                                         </div>
                                     </button>
                                     <div
+                                        onClick={() => setOpenMenu(false)}
                                         className={`${
-                                            openDropDown ? "" : "hidden"
+                                            openMobileDropDown ? "" : "hidden"
                                         } absolute right-0 top-11 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md primary-text shadow-lg bg-gray-100 dark:bg-[#001d30] focus:outline-none`}
                                     >
                                         <div className="px-1 py-1 " role="none">
@@ -367,6 +372,7 @@ const Navbar: FC = () => {
                             ) : (
                                 <li>
                                     <Link
+                                        onClick={() => setOpenMenu(!openMenu)}
                                         className="bg-[#00bd29] text-white px-5 py-1.5 rounded"
                                         href="/login"
                                     >

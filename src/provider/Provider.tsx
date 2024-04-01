@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { FC, ReactNode, createContext, useEffect, useState } from "react";
 
 interface ProviderProps {
@@ -19,10 +20,11 @@ interface ContextProps {
 export const AuthContext = createContext<ContextProps | null>(null);
 
 const Provider: FC<ProviderProps> = ({ children }) => {
+    const router = useRouter()
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const login = async (email: string, password: string) => {
-        const response = await fetch("http://localhost:8080/login", {
+        const response = await fetch("https://edupy-server.vercel.app/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -82,6 +84,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
         setUser(null);
         localStorage.removeItem("token");
         setIsLoading(false);
+        router.push('/login')
     };
 
     useEffect(() => {
@@ -101,6 +104,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
                         }
                     );
                     const result = await response.json();
+                    
                     if (result) {
                         await fetch("/api/session", {
                             method: "POST",
@@ -112,6 +116,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
                     }
                     setUser(result);
                     if (response.status === 401) {
+                        await fetch("/api/logout")
                         setUser(null);
                         localStorage.removeItem("token");
                     }
@@ -124,6 +129,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
                     setIsLoading(false);
                 }
             } else {
+                await fetch("/api/logout")
                 setUser(null);
                 setIsLoading(false);
             }

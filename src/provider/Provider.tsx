@@ -22,7 +22,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const login = async (email: string, password: string) => {
-        const response = await fetch("https://edupy-server.vercel.app/login", {
+        const response = await fetch("http://localhost:8080/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -33,6 +33,15 @@ const Provider: FC<ProviderProps> = ({ children }) => {
             return false;
         }
         const result = await response.json();
+
+        await fetch("/api/session", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(result.token),
+        });
+
         localStorage.setItem("token", result.token);
         setUser(result.user);
         setIsLoading(false);
@@ -44,15 +53,24 @@ const Provider: FC<ProviderProps> = ({ children }) => {
         email: string,
         password: string
     ) => {
-        const response = await fetch("https://edupy-server.vercel.app/register", {
+        const response = await fetch(
+            "https://edupy-server.vercel.app/register",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, username, email, password }),
+            }
+        );
+        const result = await response.json();
+        await fetch("/api/session", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name, username, email, password }),
+            body: JSON.stringify(result.token),
         });
-        const result = await response.json();
-
         localStorage.setItem("token", result.token);
         setIsLoading(false);
         setUser(result.user);
@@ -60,6 +78,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
     };
 
     const logout = async () => {
+        await fetch("/api/logout")
         setUser(null);
         localStorage.removeItem("token");
         setIsLoading(false);
@@ -82,6 +101,15 @@ const Provider: FC<ProviderProps> = ({ children }) => {
                         }
                     );
                     const result = await response.json();
+                    if (result) {
+                        await fetch("/api/session", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(token),
+                        });
+                    }
                     setUser(result);
                     if (response.status === 401) {
                         setUser(null);
@@ -89,6 +117,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
                     }
                 } catch (error) {
                     console.error("Token verification failed:", error);
+                    await fetch("/api/logout")
                     setUser(null);
                     localStorage.removeItem("token");
                 } finally {
